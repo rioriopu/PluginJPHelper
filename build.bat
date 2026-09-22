@@ -12,7 +12,10 @@ set "SOURCEICON=%~dp0images\icon.png"
 set "SOURCEDICT=%~dp0Dictionaries"
 set "OUTDIR=%~dp0PluginJPHelper\bin\x64\Release"
 set "BUILDDLL=%OUTDIR%\PluginJPHelper.dll"
-set "LOCAL=Z:\PluginJPHelper\Current"
+rem テスト用ブランチ限定: Dalamud の Dev Plugin ディレクトリへ直接配置する。
+rem ゲーム起動中でも DLL を上書きすればリロードされる。
+set "LOCAL=C:\DevPlugins\PluginJPHelper"
+set "LOCALROOT=C:\DevPlugins"
 set "RELEASE=%~dp0release\PluginJPHelper"
 set "ZIPFILE=%~dp0release\PluginJPHelper_v%VERSION%.zip"
 
@@ -116,8 +119,8 @@ echo [OK] Release icon: %RELEASE%\images\icon.png
 
 echo.
 echo [4/5] Copying to local test folder...
-if not exist "Z:\" (
-    echo [ERROR] Z: drive was not found.
+if not exist "%LOCALROOT%\" (
+    echo [ERROR] %LOCALROOT% was not found.
     echo Target: %LOCAL%
     goto :fail
 )
@@ -126,7 +129,7 @@ if exist "%LOCAL%" rmdir /s /q "%LOCAL%"
 mkdir "%LOCAL%" >nul 2>nul
 xcopy "%RELEASE%\*" "%LOCAL%\" /E /I /Y /Q >nul
 if errorlevel 1 (
-    echo [ERROR] Failed to copy to Z: drive.
+    echo [ERROR] Failed to copy to %LOCALROOT%.
     goto :fail
 )
 
